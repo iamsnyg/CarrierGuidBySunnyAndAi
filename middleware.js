@@ -1,4 +1,5 @@
 import { auth, clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 const isProtectionPages = createRouteMatcher([
   "/dashboard(.*)",
@@ -9,7 +10,8 @@ const isProtectionPages = createRouteMatcher([
   
 ])
 
-export default clerkMiddleware(async (auth, req) => { 
+export default clerkMiddleware(
+  async (auth, req) => { 
   const { userId } = await auth();
 
   if (!userId && isProtectionPages(req)) {
@@ -18,7 +20,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   return NextResponse.next();
-})
+  })
 
 
 export const config = {
