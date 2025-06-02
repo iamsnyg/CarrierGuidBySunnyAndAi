@@ -7,6 +7,10 @@ export default function Home() {
     <div>
       <div className="grid-background"></div>
       <HeroSection />
+
+      <section>
+        
+      </section>
     </div>
   );
 }
