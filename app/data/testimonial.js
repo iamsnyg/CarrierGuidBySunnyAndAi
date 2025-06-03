@@ -23,4 +23,20 @@ export const testimonial = [
     role: "Marketing Director",
     company: "Global Corp",
 },
+{
+    quote:
+    "The cover letter generator saved me hours. Tailored perfectly to the job I applied for!",
+    author: "John Doe",
+    image: "https://randomuser.me/api/portraits/men/74.jpg",
+    role: "Senior Developer",
+    company: "Innovative Tech Solutions",
+},
+{
+    quote:
+    "The AI tools helped me land a job in a new industry. Couldn't have done it without this platform!",
+    author: "Jane Smith",
+    image: "https://randomuser.me/api/portraits/women/73.jpg",
+    role: "Product Manager",
+    company: "Tech Startup",
+},  
 ];
