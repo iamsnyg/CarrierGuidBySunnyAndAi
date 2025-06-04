@@ -80,4 +80,35 @@ model IndustryInsight {
   id          String   @id @default(cuid())
   industry    String   @unique // e.g., "Technology", "Healthcare"
   users       User[]
+
+  //salary Data
+  salaryRange Json[] // Array of { jobTitle, minSalary, maxSalary }
+
+  //Industry trends
+  growthRate      Float
+  demandLevel     DemandLevel // e.g., "High", "Medium", "Low"
+  topSkills       String[] // Array of top skills in the industry
+
+  //Market conditions
+  marketOutlook       MarketOutlook // e.g., "Positive", "Neutral", "Negative"
+  keyTrends           String[] // Array of current industry trends
+
+  //learning suggestions
+  recommendedSkills String[] // Array of skills recommended for the industry
+
+  lastUpdated     DateTime @default(now()) // Last updated timestamp for insights
+  nextUpdate      DateTime
+
+  @@index([industry]) // Index for faster lookups by industry
+}
+
+enum DemandLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+enum MarketOutlook {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }
