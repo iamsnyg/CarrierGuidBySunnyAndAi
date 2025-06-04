@@ -7,9 +7,77 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
+  
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  clerkUserId   String    @unique  // Clerk user ID
+  email         String    @unique 
+  name          String?
+  imageUrl      String?
+  industry      String?
+  industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  //Profile fields
+  bio           String?
+  experience    String?
+  skills        String[]
+
+  assessments   Assessment[]
+  resume        Resume?
+  coverLetter   CoverLetter[]
+}
+
+model Assessment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  quizScore   Float?
+  questions    Json[]  // Array of { question, answer, userAnswer, isCorrect }
+  category    String? // e.g., "Technical", "Behavioral"
+  improvementTips String? // Tips for improvement based on assessment results given by AI
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId]) // Index for faster lookups by user
+}
+
+  
+model Resume {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  content     String   @db.Text // Store resume content as text
+  atsScore    Float?  // ATS score for the resume
+  feedback    String? // Feedback on the resume given by AI
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CoverLetter {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  content     String   
+  jobDescription String? // Optional job description to tailor the cover letter
+  companyName String // Company name for the cover letter
+  jobTitle    String // position applied for
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId]) // Index for faster lookups by user
+}
+
+model IndustryInsight {
+  id          String   @id @default(cuid())
+  industry    String   @unique // e.g., "Technology", "Healthcare"
+  users       User[]
 }
