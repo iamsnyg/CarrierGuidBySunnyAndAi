@@ -1,8 +1,11 @@
+import { industries } from '@/app/data/industries'
 import React from 'react'
 
 function OnboardingPage() {
   return (
-    <div>onboarding </div>
+    <main>
+      <OnboardingForm industries={industries} />
+    </main>
   )
 }
 
