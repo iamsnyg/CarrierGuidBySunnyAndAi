@@ -9,7 +9,7 @@ export async function updateUser(data) {
         throw new Error("User not authenticated");
     }
 
-    const user = db.user.findUnique({
+    const user = await db.user.findUnique({
         where: {
             clerkUserId: userId,
         }
@@ -66,6 +66,41 @@ export async function updateUser(data) {
     } catch (error) {
         console.error("Error updating user:", error);
         throw new Error("Failed to update user");
+        
+    }
+
+}
+
+
+export async function getUserOnboardingStatus() {
+    const { userId } = await auth();
+    if (!userId) {
+    throw new Error("User not authenticated");
+    }
+
+    const user = await db.user.findUnique({
+        where: {
+            clerkUserId: userId,
+        },
+    });
+
+    if (!user) throw new Error("User not found");
+
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                clerkUserId: userId,
+            },
+            select: {
+                industry: true,
+            }
+        })
+        return {
+            isOnboarded: !!user?.industry, // returns true if industry is set
+        };
+    } catch (error) {
+        console.error("Error fetching onboarding status:", error);
+        throw new Error("Failed to fetch onboarding status");
         
     }
 
