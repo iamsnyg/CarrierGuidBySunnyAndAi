@@ -182,7 +182,7 @@
 
 @layer utilities {
   .gradient {
-    @apply bg-gradient-to-b from-gray-400 via-gray-200 to-gray-600;
+    @apply bg-gradient-to-b from-purple-400 via-gray-200 to-purple-600;
   }
 
   .gradient-title {
