@@ -31,7 +31,7 @@ export async function updateUser(data) {
                     industryInsight = await tx.industryInsight.create({
                         data: {
                             industry: data.industry,
-                            salaryRanges: [],
+                            salaryRange: [],
                             growthRate: 0,
                             demandLevel: "MEDIUM",
                             topSkills: [],
@@ -49,7 +49,7 @@ export async function updateUser(data) {
                     },
                     data: {
                         industry: data.industry,
-                        experience: data.experience,
+                        experience: data.experience.toString(), // convert to string
                         bio: data.bio,
                         skills: data.skills,
                     },
@@ -69,7 +69,7 @@ export async function updateUser(data) {
             ...result,
         }
     } catch (error) {
-        console.error("Error updating user:", error);
+        console.error("Error updating user:", error.message);
         throw new Error("Failed to update user");
         
     }

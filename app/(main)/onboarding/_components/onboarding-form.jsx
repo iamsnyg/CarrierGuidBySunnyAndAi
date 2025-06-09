@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import useFetch from '@/hooks/use-fetch'
 import { updateUser } from '@/actions/user'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 
 const OnboardingForm = ({ industries }) => {
     const [selectIndustry, setSelectIndustry] = useState(null)
@@ -26,6 +27,7 @@ const OnboardingForm = ({ industries }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
         resolver: zodResolver(onboardingSchema),
+
     })
 
     const onSubmit = async (values) => {
@@ -65,6 +67,7 @@ return (
                     <div className='space-y-2'>
                         <Label htmlFor="industry" className="">Industry</Label>
                         <Select
+                            value={watch('industry')}
                             onValueChange={(value) => {
                                 setValue('industry', value);
                                 setSelectIndustry(
@@ -91,7 +94,8 @@ return (
                     {watchIndustry && (
                         <div className='space-y-2'>
                         <Label htmlFor="subIndustry" className="">Specialization</Label>
-                        <Select
+                            <Select
+                            value={watch('subIndustry')}
                             onValueChange={(value) => {
                                 setValue('subIndustry', value);
                             }}
@@ -130,7 +134,7 @@ return (
                             placeholder="e.g. JavaScript, React, Node.js" 
                             {...register('skills')}
                         />
-                        <p className='text-sm text-muted-foreground'>Seperate skills with a comma(,)</p>
+                        <p className='text-sm text-muted-foreground'>Separate skills with a comma(,)</p>
                         {errors.skills && <p className='text-red-500 text-sm'>{errors.skills.message}</p>}
                     </div>
                     <div className='space-y-2'>
@@ -143,16 +147,18 @@ return (
                         
                         {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
                     </div>
-                    <Button type="submit" disabled={updateLoading} className='w-full bg-purple-500 hover:border hover:border-purple-500'>
-                        {updateLoading ? (
-                            <>
-                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                                Updating...
-                            </> 
-                        ) : (
-                            'Update Profile'
-                        )}
-                    </Button>
+                    <div>
+                        <Button type="submit" disabled={updateLoading} className='w-full bg-purple-500 hover:border hover:border-purple-500'>
+                            {updateLoading ? (
+                                <>
+                                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                    Updating...
+                                </> 
+                            ) : (
+                                'Update Profile'
+                            )}
+                        </Button>
+                    </div>
                 </form>
             </CardContent>
             
