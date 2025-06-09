@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { onboardingSchema } from '@/app/lib/schema'
@@ -11,18 +11,46 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import useFetch from '@/hooks/use-fetch'
+import { updateUser } from '@/actions/user'
+import { toast } from 'sonner'
 
 const OnboardingForm = ({ industries }) => {
     const [selectIndustry, setSelectIndustry] = useState(null)
     const router = useRouter()
+    const { 
+        data: updateResult,
+        loading: updateLoading,
+        fn: updateUserFn
+    } = useFetch(updateUser);
 
     const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
         resolver: zodResolver(onboardingSchema),
     })
 
     const onSubmit = async (values) => {
-        console.log('Form submitted:', values)
-     }
+        try {
+            const formattedIndustry = `${values.industry} - ${values.subIndustry
+                .toLowerCase()
+                .replace(/ /g, '-')
+                }`;
+            
+            await updateUserFn({
+                ...values,
+                industry: formattedIndustry,
+            })
+        } catch (error) {
+            console.error('Error updating user:', error)
+        }
+    }
+
+    useEffect(() => {
+        if (updateResult?.success && !updateLoading) {
+            toast.success('Profile updated successfully!');
+            router.push('/dashboard');
+            router.refresh();
+        }
+    }, [updateResult, updateLoading])
 
     const watchIndustry = watch('industry')
 return (
@@ -115,7 +143,16 @@ return (
                         
                         {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
                     </div>
-                    <Button type="submit" className='w-full bg-purple-500 hover:border hover:border-purple-500'>Submit</Button>
+                    <Button type="submit" disabled={updateLoading} className='w-full bg-purple-500 hover:border hover:border-purple-500'>
+                        {updateLoading ? (
+                            <>
+                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                Updating...
+                            </> 
+                        ) : (
+                            'Update Profile'
+                        )}
+                    </Button>
                 </form>
             </CardContent>
             

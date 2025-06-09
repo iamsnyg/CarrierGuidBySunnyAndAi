@@ -33,9 +33,9 @@ export async function updateUser(data) {
                             industry: data.industry,
                             salaryRanges: [],
                             growthRate: 0,
-                            demandLevel: "Medium",
+                            demandLevel: "MEDIUM",
                             topSkills: [],
-                            marketOutlook: "Neutral",
+                            marketOutlook: "NEUTRAL",
                             keyTrends: [],
                             recommendedSkills: [],
                             nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7  days from now
@@ -63,6 +63,11 @@ export async function updateUser(data) {
                 timeout: 10000, // 10 seconds timeout
             }
         )
+
+        return {
+            success: true,
+            ...result,
+        }
     } catch (error) {
         console.error("Error updating user:", error);
         throw new Error("Failed to update user");
