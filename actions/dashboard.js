@@ -18,9 +18,9 @@ export const generateAIInsight = async(industry) => {
             { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
             ],
             "growthRate": number,
-            "demandLevel": "High" | "Medium" | "Low",
+            "demandLevel": "HIGH" | "MEDIUM" | "LOW",
             "topSkills": ["skill1", "skill2"],
-            "marketOutlook": "Positive" | "Neutral" | "Negative",
+            "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
             "keyTrends": ["trend1", "trend2"],
             "recommendedSkills": ["skill1", "skill2"]
         }
@@ -54,14 +54,14 @@ export async function getIndustryInsight() {
 
     if (!user.industryInsight) {
         const insight = await generateAIInsight(user.industry);
+        console.log("Generated Insight:", insight);
 
         const industryInsight = await db.industryInsight.create({
-            data: {
-                industry: user.industry,
-                ...insight, // Assuming insight is an object with the necessary fields
-                nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-                
-            },
+          data: {
+            industry: user.industry,
+            ...insight, // Assuming insight is an object with the necessary fields
+            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+          },
         });
 
         return industryInsight;

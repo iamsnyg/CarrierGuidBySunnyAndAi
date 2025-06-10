@@ -2,6 +2,8 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { generateAIInsight } from "./dashboard";
+// import { generateAIInsight } from "./dashboard";
 
 export async function updateUser(data) {
     const { userId } = await auth();
@@ -28,18 +30,14 @@ export async function updateUser(data) {
                 })
                 //if industry does not exist, create it with default values- will replace it with ai later
                 if (!industryInsight) {
-                    industryInsight = await tx.industryInsight.create({
+                    const insight = await generateAIInsight(data.industry);
+                    industryInsight = await db.industryInsight.create({
                         data: {
                             industry: data.industry,
-                            salaryRange: [],
-                            growthRate: 0,
-                            demandLevel: "MEDIUM",
-                            topSkills: [],
-                            marketOutlook: "NEUTRAL",
-                            keyTrends: [],
-                            recommendedSkills: [],
-                            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7  days from now
-                        }
+                            ...insight, // Assuming insight is an object with the necessary fields
+                            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+                            
+                        },
                     });
                 }
                 // update the user
