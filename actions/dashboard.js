@@ -60,11 +60,11 @@ export async function getIndustryInsight() {
         console.log("Generated Insight:", insight);
 
         const industryInsight = await db.industryInsight.create({
-          data: {
-            industry: user.industry,
-            ...insight, // Assuming insight is an object with the necessary fields
-            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-          },
+            data: {
+                industry: user.industry,
+                ...insight, // Assuming insight is an object with the necessary fields
+                nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+            },
         });
 
         return industryInsight;
