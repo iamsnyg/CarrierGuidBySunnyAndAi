@@ -92,7 +92,7 @@ export async function saveQuizResult(questions, answers, score) {
         const wrongQuestionsText = wrongAnswers.map((q) =>
             `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`
         ).join("\n\n");
-    }
+    
     const improvementPrompt = `
         The user got the following ${user.industry} technical interview questions wrong:
 
@@ -115,6 +115,7 @@ export async function saveQuizResult(questions, answers, score) {
     } catch (error) {
         console.error("Error generating improvement tip:", error);
         throw new Error("Failed to generate improvement tip");
+        }
     }
 
     try {
@@ -124,7 +125,7 @@ export async function saveQuizResult(questions, answers, score) {
                 quizScore: score,
                 questions: quizResult,
                 category: "Technical",
-                improvementTip: improvementTip || "No specific improvement tip available."
+                improvementTips: improvementTip || "No specific improvement tip available."
             },
         });
         console.log("Quiz result saved successfully:", assessment);
@@ -134,5 +135,5 @@ export async function saveQuizResult(questions, answers, score) {
         throw new Error("Failed to save quiz result");
     }
 
-    
+
 }
