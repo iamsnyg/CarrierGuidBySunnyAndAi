@@ -1,9 +1,9 @@
 import React from 'react'
 
-function InterviewPage() {
+function InterviewPrepPage() {
   return (
-    <div>InterviewPage</div>
+    <div>InterviewPrepPage</div>
   )
 }
 
-export default InterviewPage
+export default InterviewPrepPage
