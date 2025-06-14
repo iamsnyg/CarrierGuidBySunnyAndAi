@@ -14,7 +14,7 @@ async function InterviewPrepPage() {
           Prepare for your next interview with our comprehensive resources
         </p>
 
-      <div>
+      <div className="container mx-auto space-y-6 py-6">
         <StatsCard assessments={assessments} />
         <PerformanceCard assessments={assessments} />
         <QuizList assessments={assessments} />
