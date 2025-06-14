@@ -23,12 +23,12 @@ export async function generateTechnicalQuiz() {
 
   if (!user) throw new Error("User not found");
 
-  try {
+    try {
     const prompt = `
         Generate 3 technical interview questions for a ${
-          user.industry
+            user.industry
         } professional${
-      user.skills?.length ? ` with expertise in ${user.skills.join(", ")}` : ""
+        user.skills?.length ? ` with expertise in ${user.skills.join(", ")}` : ""
     }.
         
         Each question should be multiple choice with 4 options.
@@ -136,4 +136,36 @@ export async function saveQuizResult(questions, answers, score) {
     }
 
 
+}
+
+
+export async function getAssessment() {
+    const { userId } = await auth();
+    if (!userId) {
+        throw new Error("User not authenticated");
+    }
+
+    const user = await db.user.findUnique({
+        where: {
+            clerkUserId: userId,
+        },
+    });
+
+    if (!user) throw new Error("User not found");
+
+    try {
+        const assessments = await db.assessment.findMany({
+            where: {
+                userId: user.id,
+            },
+            orderBy: {
+                createdAt: 'asc',
+            },
+            
+        })
+        return assessments;
+    } catch (error) {
+        console.error("Error fetching assessments:", error);
+        throw new Error("Failed to fetch assessments");
+    }
 }
