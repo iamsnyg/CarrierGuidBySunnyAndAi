@@ -10,7 +10,7 @@ const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
 });
 
-export async function saveResume() {
+export async function saveResume(content) {
     const { userId } = await auth();
     if (!userId) {
         throw new Error("User not authenticated");
@@ -23,7 +23,9 @@ export async function saveResume() {
     })
 
     if (!user) throw new Error("User not found");
+    
 
+        
     try {
         const resume = await db.resume.upsert({
             where: {
@@ -36,15 +38,20 @@ export async function saveResume() {
                 userId: user.id,
                 content,
             },
-        }); 
+        });
 
         revalidatePath("/resume");
         return resume;
+        
     } catch (error) {
         console.error("Error saving resume:", error.message);
         throw new Error("Failed to save resume");
-        
     }
+
+
+    console.log("Resume saved:", resume);
+
+
 
 
 }
