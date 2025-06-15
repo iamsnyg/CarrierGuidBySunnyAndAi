@@ -1,14 +1,59 @@
 "use client";   
 
+import { saveResume } from '@/actions/resume';
+import { resumeSchema } from '@/app/lib/schema';
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import useFetch from '@/hooks/use-fetch';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { DownloadCloud, Save } from 'lucide-react'
 // import { Download } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form';
 
 function ResumeBuilder({ initialContent }) {
 
     const [activeTab, setActiveTab] = useState('edit');
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(resumeSchema),
+        defaultValues: {
+            contactInfo: {},
+            summary: "",
+            skills: "",
+            education: [],
+            experience: [],
+            projects: [],
+        }
+    })
+
+    const {
+        data: saveResult,
+        loading: isSaving,
+        error: saveError,
+        fn: saveResumeFn,
+    } = useFetch( saveResume)
+
+
+    // const formValues = watch();
+
+    useEffect(() => {
+        if (initialContent) {
+            setActiveTab('preview');
+        }
+    }, [initialContent]);
+
+    const onSubmit = async (data)=>{}
+
+    
     return (
         <div className="space-y-4">
             <div className="flex flex-col md:flex-row justify-between items-center  gap-2">
@@ -33,7 +78,187 @@ function ResumeBuilder({ initialContent }) {
                     <TabsTrigger value="preview">Markdown</TabsTrigger>
                 </TabsList>
                 <TabsContent value="edit">
-                    Make changes to your account here.
+                    <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
+                        <div className='space-y-4'>
+                            <h3 className='text-lg font-medium'>Contact Information</h3>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50 '>
+                                <div className='space-y-2'>
+                                    <label className='text-sm font-medium'>Email</label>
+                                    <Input
+                                        {...register("contactInfo.email")}
+                                        placeholder="your@email.com"
+                                        type="email"
+                                        error={errors.contactInfo?.email}
+                                    />
+                                    <div>{errors.contactInfo?.email && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.contactInfo.email.message}
+                                        </p>
+                                    )}</div>
+                                </div>
+
+
+                                <div className='space-y-2'>
+                                    <label className='text-sm font-medium'>Mobile</label>
+                                    <Input
+                                        {...register("contactInfo.mobile")}
+                                        placeholder="+123-456-7890"
+                                        type="tel"
+                                        error={errors.contactInfo?.mobile}
+                                    />
+                                    <div>{errors.contactInfo?.mobile && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.contactInfo.mobile.message}
+                                        </p>
+                                    )}</div>
+                                </div>
+
+
+                                <div className='space-y-2'>
+                                    <label className='text-sm font-medium'>LinkedIn URL</label>
+                                    <Input
+                                        {...register("contactInfo.linkedin")}
+                                        placeholder="https://www.linkedin.com/in/your-profile"
+                                        type="url"
+                                        error={errors.contactInfo?.linkedin}
+                                    />
+                                    <div>{errors.contactInfo?.linkedin && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.contactInfo.linkedin.message}
+                                        </p>
+                                    )}</div>
+                                </div>
+
+
+                                <div className='space-y-2'>
+                                    <label className='text-sm font-medium'>GitHub URL</label>
+                                    <Input
+                                        {...register("contactInfo.github")}
+                                        placeholder="https://github.com/your-profile"
+                                        type="url"
+                                        error={errors.contactInfo?.github}
+                                    />
+                                    <div>{errors.contactInfo?.github && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.contactInfo.github.message}
+                                        </p>
+                                    )}</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className='space-y-2'>
+                            <h3 className='text-lg font-medium'>Professional Summary</h3>
+                            <Controller
+                                name="summary"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="Write a brief summary about yourself"
+                                        className="h-32"
+                                        error={errors.summary}
+                                    />
+                                )}
+                            />
+                            <div>
+                                {errors.summary && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.summary.message}
+                                </p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className='space-y-2'>
+                            <h3 className='text-lg font-medium'>Skills</h3>
+                            <Controller
+                                name="skills"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="List your skills, separated by commas"
+                                        className="h-32"
+                                        error={errors.skills}
+                                    />
+                                )}
+                            />
+                            <div>
+                                {errors.skills && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.skills.message}
+                                </p>
+                                )}
+                            </div>
+                        </div>        
+                        
+                        <div className='space-y-2'>
+                            <h3 className='text-lg font-medium'>Work Experience</h3>
+                            <Controller
+                                name="experience"
+                                control={control}
+                                render={({ field }) => (
+                                    
+                                )}
+                            />
+                            <div>
+                                {errors.experience && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.experience.message}
+                                </p>
+                                )}
+                            </div>
+                        </div>          
+                        
+                        <div className='space-y-2'>
+                            <h3 className='text-lg font-medium'>Education</h3>
+                            <Controller
+                                name="education"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="Write about your education background"
+                                        className="h-32"
+                                        error={errors.education}
+                                    />
+                                )}
+                            />
+                            <div>
+                                {errors.education && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.education.message}
+                                </p>
+                                )}
+                            </div>
+                        </div>                 
+
+                        
+                        <div className='space-y-2'>
+                            <h3 className='text-lg font-medium'>Projects</h3>
+                            <Controller
+                                name="projects"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="Describe your projects and achievements"
+                                        className="h-32"
+                                        error={errors.projects}
+                                    />
+                                )}
+                            />
+                            <div>
+                                {errors.projects && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.projects.message}
+                                </p>
+                                )}
+                            </div>
+                        </div>
+                    </form>
                 </TabsContent>
                 <TabsContent value="preview">
                     Change your password here.

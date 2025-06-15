@@ -18,7 +18,7 @@ export const onboardingSchema = z.object({
 
 export const contactSchema = z.object({
     email: z.string().email("Invalid email address"),
-    phone: z.string().optional(),
+    mobile: z.string().optional(),
     linkedin: z.string().url("Invalid LinkedIn URL").optional(),
     github: z.string().url("Invalid GitHub URL").optional(),
 });
@@ -26,8 +26,8 @@ export const contactSchema = z.object({
 export const entrySchema = z.object({
     title: z.string().min(1, "Title is required"),
     organization: z.string().min(1, "Organization is required"),
-    startDate: z.date().min(1, "Start date is required"),
-    endDate: z.date().optional(),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional(),
     description: z.string().min(1, "Description is required"),
     current: z.boolean().default(false),
 }).refine((data) => {
@@ -43,10 +43,10 @@ export const entrySchema = z.object({
 
 
 export const resumeSchema = z.object({
-    contact: contactSchema,
+    contactInfo: contactSchema,
     summary: z.string().min(1, "Professional summary is required"),
     skills: z.string().min(1, "Skills are required"),
-    experiences: z.array(entrySchema),
+    experience: z.array(entrySchema),
     education: z.array(entrySchema),
     projects: z.array(entrySchema),
 });
