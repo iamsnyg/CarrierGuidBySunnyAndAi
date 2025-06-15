@@ -12,6 +12,7 @@ import { DownloadCloud, Save } from 'lucide-react'
 // import { Download } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
+import EntryForm from './entry-form';
 
 function ResumeBuilder({ initialContent }) {
 
@@ -200,7 +201,11 @@ function ResumeBuilder({ initialContent }) {
                                 name="experience"
                                 control={control}
                                 render={({ field }) => (
-                                    
+                                    <EntryForm
+                                        type="Experience"
+                                        entries={field.value}
+                                        onChange={field.onChange}
+                                    />
                                 )}
                             />
                             <div>
@@ -218,11 +223,10 @@ function ResumeBuilder({ initialContent }) {
                                 name="education"
                                 control={control}
                                 render={({ field }) => (
-                                    <Textarea
-                                        {...field}
-                                        placeholder="Write about your education background"
-                                        className="h-32"
-                                        error={errors.education}
+                                    <EntryForm
+                                        type="Education"
+                                        entries={field.value}
+                                        onChange={field.onChange}
                                     />
                                 )}
                             />
@@ -242,11 +246,10 @@ function ResumeBuilder({ initialContent }) {
                                 name="projects"
                                 control={control}
                                 render={({ field }) => (
-                                    <Textarea
-                                        {...field}
-                                        placeholder="Describe your projects and achievements"
-                                        className="h-32"
-                                        error={errors.projects}
+                                    <EntryForm
+                                        type="Projects"
+                                        entries={field.value}
+                                        onChange={field.onChange}
                                     />
                                 )}
                             />
